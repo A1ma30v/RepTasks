@@ -6,7 +6,7 @@ $password = "";
 $database = "newDB";
 // создаем подключение к дб.
 $connection = new mysqli($servername, $username, $password, $database);
-// проверка соединение на ошибки.
+// проверка соединения на ошибки.
 if ($connection->connect_error) {
     die("Ошибка соединения " . $connection->connect_error); //если подключение не удалось выводим сообщение
 }
@@ -15,7 +15,8 @@ $sql = "CREATE TABLE Users  (
     id INT(6)   PRIMARY KEY,
     name VARCHAR(30) NOT NULL ,
     surname VARCHAR(30) NOT NULL ,
-    email     VARCHAR(60),
+    email     VARCHAR(60) NOT NULL , 
+    password VARCHAR(30) NOT NULL,
     reg_data TIMESTAMP 
                     )" ;
 
@@ -33,7 +34,7 @@ $connection->close();
 // Создаем таблицу UserOrders
 $connection = new mysqli($servername, $username, $password, $database);
 $sql = "CREATE TABLE UserOrders  (
-    userid INT(6)   PRIMARY KEY,
+    user_id INT(6)   PRIMARY KEY,
     user_order VARCHAR(30) NOT NULL ,
     currency VARCHAR(3) NOT NULL ,
     reg_data TIMESTAMP 
@@ -48,4 +49,3 @@ if ($connection -> query($sql) === TRUE){
 
 // Закрываем подключение снова
 $connection->close();
-?>
