@@ -1,51 +1,68 @@
 <?php
-
 $servername = "localhost";
 $username = "root";
 $password = "";
 $database = "newDB";
-// создаем подключение к дб.
+// Устанавливаем параметры подключения к базе данных
+
 $connection = new mysqli($servername, $username, $password, $database);
-// проверка соединения на ошибки.
+// Создаем новый объект для подключения к базе данных с помощью параметров
+
 if ($connection->connect_error) {
-    die("Ошибка соединения " . $connection->connect_error); //если подключение не удалось выводим сообщение
+    die("Ошибка соединения " . $connection->connect_error);
 }
-// Создаем таблицу Users
-$sql = "CREATE TABLE Users  (
-    id INT(6)   PRIMARY KEY,
-    name VARCHAR(30) NOT NULL ,
-    surname VARCHAR(30) NOT NULL ,
-    email     VARCHAR(60) NOT NULL , 
-    password VARCHAR(30) NOT NULL,
-    reg_data TIMESTAMP 
-                    )" ;
+// Проверяем, есть ли ошибки при установлении соединения. Если есть, выводим сообщение и завершаем скрипт
 
+$tableName = "Users";
+$query = "DESCRIBE $tableName";
+$resultUsers = $connection->query($query);
+// Выполняем запрос DESCRIBE для таблицы Users и сохраняем результат в переменной $resultUsers
 
-// Выводим сообщение об ошибке, если возникла ошибка при создании таблицы
-if ($connection -> query($sql) === TRUE){
-    echo "Таблица Users создана успешно";
+if ($resultUsers->num_rows > 0) {
+    echo $tableName . ' существует ';
 } else {
-    echo "Ошибка создания таблицы" . $connection->error;
+    // Если таблица Users не существует, создаем таблицу
+    $sql = "CREATE TABLE Users  (
+        id INT(6) PRIMARY KEY,
+        name VARCHAR(30) NOT NULL,
+        surname VARCHAR(30) NOT NULL,
+        email VARCHAR(60) NOT NULL, 
+        password VARCHAR(30) NOT NULL,
+        reg_data TIMESTAMP 
+    )";
+    // Создаем SQL-запрос для создания таблицы Users
+
+    if ($connection->query($sql) === TRUE) {
+        echo "Таблица Users создана успешно";
+    } else {
+        echo "Ошибка создания таблицы" . $connection->error;
+    }
+    // Выполняем SQL-запрос на создание таблицы Users и выводим сообщение об успехе или ошибке
 }
 
-// Закрываем подключение
-$connection->close();
+$tableName = "UserOrders";
+$query = "DESCRIBE $tableName";
+$resultUserOrders = $connection->query($query);
+// Выполняем запрос DESCRIBE для таблицы UserOrders и сохраняем результат в переменной $resultUserOrders
 
-// Создаем таблицу UserOrders
-$connection = new mysqli($servername, $username, $password, $database);
-$sql = "CREATE TABLE UserOrders  (
-    user_id INT(6)   PRIMARY KEY,
-    user_order VARCHAR(30) NOT NULL ,
-    currency VARCHAR(3) NOT NULL ,
-    reg_data TIMESTAMP 
-                    )" ;
-
-// Выводим сообщение об ошибке, если возникла ошипшебка при создании таблицы
-if ($connection -> query($sql) === TRUE){
-    echo "Таблица UserOrders создана успешно";
+if ($resultUserOrders->num_rows > 0) {
+    echo $tableName . ' существует ';
 } else {
-    echo "Ошибка создания таблицы" . $connection->error;
-}
+    // Если таблица UserOrders не существует, создаем таблицу
+    $sql = "CREATE TABLE UserOrders  (
+        user_id INT(6) PRIMARY KEY,
+        user_order VARCHAR(30) NOT NULL,
+        currency VARCHAR(3) NOT NULL,
+        reg_data TIMESTAMP 
+    )";
+    // Создаем SQL-запрос для создания таблицы UserOrders
 
-// Закрываем подключение снова
+    if ($connection->query($sql) === TRUE) {
+        echo "Таблица UserOrders создана успешно";
+    } else {
+        echo "Ошибка создания таблицы" . $connection->error;
+    }
+    // Выполняем SQL-запрос на создание таблицы UserOrders и выводим сообщение об успехе или ошибке
+}
+// Закрываем соединение с базой данных
 $connection->close();
